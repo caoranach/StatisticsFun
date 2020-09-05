@@ -5,15 +5,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.text.NumberFormatter;
 
 public class CoinFlip extends JPanel implements ActionListener {
 	static final int WIDTH = 1400;
@@ -27,8 +30,8 @@ public class CoinFlip extends JPanel implements ActionListener {
 	JPanel chartPanel = new JPanel();
 	JLabel flipLabel = new JLabel("FLIPS:");
 	JLabel trialLabel = new JLabel("TRIALS:");
-	JTextField flipField = new JTextField(30);
-	JTextField trialField = new JTextField(30);
+	JFormattedTextField penisTrials;
+	JFormattedTextField dickFlips;
 	JButton myBoobs = new JButton("FLIP!");
 	Random gen = new Random();
 	int trials = 100000;
@@ -46,10 +49,26 @@ public class CoinFlip extends JPanel implements ActionListener {
 		frame.setVisible(true);
 		frame.setPreferredSize(new Dimension(WIDTH+50,HEIGHT));
 		frame.add(panel);
+
+		// Formatted Field
+		NumberFormat format = NumberFormat.getInstance();
+	    NumberFormatter formatter = new NumberFormatter(format);
+	    formatter.setValueClass(Integer.class);
+	    formatter.setMinimum(0);
+	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setAllowsInvalid(false);
+	    // If you want the value to be committed on each keystroke instead of focus lost
+	    formatter.setCommitsOnValidEdit(true);
+	    penisTrials = new JFormattedTextField(formatter);
+	    dickFlips = new JFormattedTextField(formatter);
+	    penisTrials.setPreferredSize(new Dimension(80, 30));
+	    dickFlips.setPreferredSize(new Dimension(80, 30));
+	    
+	    // Other stuff
 		inputPanel.add(trialLabel);
-		inputPanel.add(trialField);
+		inputPanel.add(penisTrials);
 		inputPanel.add(flipLabel);
-		inputPanel.add(flipField);	
+		inputPanel.add(dickFlips);	
 		inputPanel.add(myBoobs);		
 		myBoobs.setPreferredSize(new Dimension(200,40));
 		myBoobs.addActionListener(this);
@@ -123,6 +142,11 @@ public class CoinFlip extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource() == myBoobs) {
+			flipsPerTrial = Integer.parseInt(dickFlips.getText().replaceAll(",", ""));
+			trials = Integer.parseInt(penisTrials.getText().replaceAll(",", ""));
+			widthPerResult = (double)GRAPH_WIDTH/(double)flipsPerTrial;
+			System.out.println("FPT: " + flipsPerTrial + ", TRIALS: " + trials);
+			initializeMap();
 			calculateFlips();
 		}
 		frame.repaint();
