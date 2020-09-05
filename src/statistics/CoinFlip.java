@@ -8,19 +8,28 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class CoinFlip extends JPanel implements ActionListener {
 	static final int WIDTH = 1400;
 	static final int HEIGHT = 800;
-	static final int GRAPH_WIDTH = 1000;
-	static final int GRAPH_HEIGHT = 600;
+	static final int GRAPH_WIDTH = 800;
+	static final int GRAPH_HEIGHT = 500;
 	Timer timer;
 	JFrame frame = new JFrame();
 	JPanel panel = new JPanel();
+	JPanel inputPanel = new JPanel();
 	JPanel chartPanel = new JPanel();
+	JLabel flipLabel = new JLabel("FLIPS:");
+	JLabel trialLabel = new JLabel("TRIALS:");
+	JTextField flipField = new JTextField(30);
+	JTextField trialField = new JTextField(30);
+	JButton myBoobs = new JButton("FLIP!");
 	Random gen = new Random();
 	int trials = 100000;
 	int flipsPerTrial = 100;
@@ -37,15 +46,23 @@ public class CoinFlip extends JPanel implements ActionListener {
 		frame.setVisible(true);
 		frame.setPreferredSize(new Dimension(WIDTH+50,HEIGHT));
 		frame.add(panel);
+		inputPanel.add(trialLabel);
+		inputPanel.add(trialField);
+		inputPanel.add(flipLabel);
+		inputPanel.add(flipField);	
+		inputPanel.add(myBoobs);		
+		myBoobs.setPreferredSize(new Dimension(200,40));
+		myBoobs.addActionListener(this);
 		panel.add(this);
-		chartPanel.setPreferredSize(new Dimension(WIDTH-GRAPH_WIDTH,HEIGHT));
+		panel.add(inputPanel);
 		panel.add(chartPanel);
+		inputPanel.setPreferredSize(new Dimension(GRAPH_WIDTH,160));
+		chartPanel.setPreferredSize(new Dimension(GRAPH_WIDTH,GRAPH_HEIGHT));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(GRAPH_WIDTH,GRAPH_HEIGHT));
 		frame.pack();
 		
 		initializeMap();
-		calculateFlips();
 		timer = new Timer(1000/60, this);
 		timer.start();
 		frame.pack();
@@ -103,8 +120,11 @@ public class CoinFlip extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if(e.getSource() == myBoobs) {
+			calculateFlips();
+		}
 		frame.repaint();
 		//repaint();
 	}
